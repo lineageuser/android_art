@@ -283,7 +283,6 @@ void CommonCompilerTestImpl::CompileMethod(ArtMethod* method) {
     } else {
       compiled_method = compiler->Compile(method->GetCodeItem(),
                                           method->GetAccessFlags(),
-                                          method->GetInvokeType(),
                                           method->GetClassDefIndex(),
                                           method->GetDexMethodIndex(),
                                           class_loader,

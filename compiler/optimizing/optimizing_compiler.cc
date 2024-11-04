@@ -256,7 +256,6 @@ class OptimizingCompiler final : public Compiler {
 
   CompiledMethod* Compile(const dex::CodeItem* code_item,
                           uint32_t access_flags,
-                          InvokeType invoke_type,
                           uint16_t class_def_idx,
                           uint32_t method_idx,
                           Handle<mirror::ClassLoader> class_loader,
@@ -1065,7 +1064,6 @@ CodeGenerator* OptimizingCompiler::TryCompileIntrinsic(
 
 CompiledMethod* OptimizingCompiler::Compile(const dex::CodeItem* code_item,
                                             uint32_t access_flags,
-                                            InvokeType invoke_type,
                                             uint16_t class_def_idx,
                                             uint32_t method_idx,
                                             Handle<mirror::ClassLoader> jclass_loader,
@@ -1083,9 +1081,7 @@ CompiledMethod* OptimizingCompiler::Compile(const dex::CodeItem* code_item,
   {
     ScopedObjectAccess soa(Thread::Current());
     ArtMethod* method =
-        runtime->GetClassLinker()->ResolveMethod<ClassLinker::ResolveMode::kCheckICCEAndIAE>(
-            method_idx, dex_cache, jclass_loader, /*referrer=*/ nullptr, invoke_type);
-    DCHECK_EQ(method == nullptr, soa.Self()->IsExceptionPending());
+        runtime->GetClassLinker()->ResolveMethodId(method_idx, dex_cache, jclass_loader);
     soa.Self()->ClearException();  // Suppress exception if any.
     VariableSizedHandleScope handles(soa.Self());
     Handle<mirror::Class> compiling_class =

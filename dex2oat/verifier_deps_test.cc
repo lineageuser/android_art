@@ -153,12 +153,10 @@ class VerifierDepsTest : public CommonCompilerDriverTest {
 
     for (const ClassAccessor::Method& method : accessor.GetMethods()) {
       ArtMethod* resolved_method =
-          class_linker_->ResolveMethod<ClassLinker::ResolveMode::kNoChecks>(
+          class_linker_->ResolveMethodId(
               method.GetIndex(),
               dex_cache_handle,
-              class_loader_handle,
-              /* referrer= */ nullptr,
-              method.GetInvokeType(class_def->access_flags_));
+              class_loader_handle);
       CHECK(resolved_method != nullptr);
       if (method_name == resolved_method->GetName()) {
         std::unique_ptr<MethodVerifier> verifier(
